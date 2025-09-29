@@ -25,4 +25,16 @@ class Restaurant extends Model
     {
         return $this->hasMany(Reservation::class);
     }
+
+
+    public function getTotalTablesAttribute(): int
+    {
+        return $this->tables()->count();
+    }
+
+
+    public function getMaxPeopleCapacityAttribute(): int
+    {
+        return $this->tables()->sum('max_people_count');
+    }
 }
