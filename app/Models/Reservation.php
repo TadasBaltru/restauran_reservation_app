@@ -12,7 +12,7 @@ use Carbon\Carbon;
 class Reservation extends Model
 {
     use HasFactory;
-    
+
     protected $fillable = [
         'restaurant_id',
         'reservation_name',
