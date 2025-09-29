@@ -98,7 +98,7 @@
                                         
                                         @if($restaurant->tables->max('max_people_count') > 0)
                                             <div class="w-full bg-gray-200 rounded-full h-2">
-                                                <div class="bg-indigo-600 h-2 rounded-full"  {{"style" ("width: " . ($table->max_people_count / $restaurant->tables->max('max_people_count')) * 100) }}%></div>
+                                                <div class="bg-indigo-600 h-2 rounded-full"  style="width: {{ ($table->max_people_count / $restaurant->tables->max('max_people_count')) * 100 }}%;"></div>
                                             </div>
                                         @endif
                                     </div>

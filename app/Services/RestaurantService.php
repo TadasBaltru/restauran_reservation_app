@@ -12,7 +12,6 @@ use Illuminate\Validation\Rule;
 
 class RestaurantService
 {
-
     public function getPaginatedRestaurants(int $perPage = 12): LengthAwarePaginator
     {
         return Restaurant::withCount('tables')

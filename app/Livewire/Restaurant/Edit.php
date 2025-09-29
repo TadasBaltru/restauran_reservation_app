@@ -4,6 +4,8 @@ namespace App\Livewire\Restaurant;
 
 use App\Models\Restaurant;
 use App\Services\RestaurantService;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\View\View;
 use Livewire\Component;
 
 class Edit extends Component
@@ -12,12 +14,8 @@ class Edit extends Component
     public $name = '';
     public $tables = [];
 
-    protected $listeners = [
-        'addTable' => 'addTable',
-        'removeTable' => 'removeTable',
-    ];
 
-    public function mount(Restaurant $restaurant)
+    public function mount(Restaurant $restaurant): void
     {
         $this->restaurant = $restaurant;
         $this->name = $restaurant->name;
@@ -35,7 +33,7 @@ class Edit extends Component
         }
     }
 
-    public function addTable()
+    public function addTable(): void
     {
         $this->tables[] = [
             'id' => null,
@@ -45,7 +43,7 @@ class Edit extends Component
         ];
     }
 
-    public function removeTable($index)
+    public function removeTable($index): void
     {
         if (count($this->tables) > 1) {
             unset($this->tables[$index]);
@@ -78,12 +76,12 @@ class Edit extends Component
         }
     }
 
-    public function cancel()
+    public function cancel(): RedirectResponse
     {
         return redirect()->route('restaurants.index');
     }
 
-    public function render()
+    public function render(): View
     {
         return view('livewire.restaurant.edit');
     }

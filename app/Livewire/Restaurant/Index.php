@@ -3,6 +3,7 @@
 namespace App\Livewire\Restaurant;
 
 use App\Services\RestaurantService;
+use Illuminate\View\View;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -18,19 +19,19 @@ class Index extends Component
         'restaurant-updated' => 'refreshComponent',
     ];
 
-    public function confirmDelete($restaurantId)
+    public function confirmDelete($restaurantId): void
     {
         $this->restaurantToDelete = $restaurantId;
         $this->confirmingDeletion = true;
     }
 
-    public function cancelDelete()
+    public function cancelDelete(): void
     {
         $this->confirmingDeletion = false;
         $this->restaurantToDelete = null;
     }
 
-    public function deleteRestaurant()
+    public function deleteRestaurant(): void
     {
         if ($this->restaurantToDelete) {
             $restaurant = \App\Models\Restaurant::find($this->restaurantToDelete);
@@ -51,12 +52,12 @@ class Index extends Component
         $this->resetPage();
     }
 
-    public function refreshComponent()
+    public function refreshComponent(): void
     {
         $this->resetPage();
     }
 
-    public function render()
+    public function render(): View
     {
         $restaurantService = app(RestaurantService::class);
         return view('livewire.restaurant.index', [

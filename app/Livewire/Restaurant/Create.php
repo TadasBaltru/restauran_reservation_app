@@ -3,6 +3,8 @@
 namespace App\Livewire\Restaurant;
 
 use App\Services\RestaurantService;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\View\View;
 use Livewire\Component;
 
 class Create extends Component
@@ -10,17 +12,12 @@ class Create extends Component
     public $name = '';
     public $tables = [];
 
-    protected $listeners = [
-        'addTable' => 'addTable',
-        'removeTable' => 'removeTable',
-    ];
-
-    public function mount()
+    public function mount(): void
     {
         $this->addTable();
     }
 
-    public function addTable()
+    public function addTable(): void
     {
         $this->tables[] = [
             'id' => null,
@@ -30,7 +27,7 @@ class Create extends Component
         ];
     }
 
-    public function removeTable($index)
+    public function removeTable($index): void
     {
         if (count($this->tables) > 1) {
             unset($this->tables[$index]);
@@ -60,17 +57,17 @@ class Create extends Component
                     }
                 }
             } else {
-                session()->flash('error', $result['message']);
+                return session()->flash('error', $result['message']);
             }
         }
     }
 
-    public function cancel()
+    public function cancel(): RedirectResponse
     {
         return redirect()->route('restaurants.index');
     }
 
-    public function render()
+    public function render(): View
     {
         return view('livewire.restaurant.create');
     }
