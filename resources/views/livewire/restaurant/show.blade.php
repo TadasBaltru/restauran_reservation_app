@@ -131,7 +131,7 @@
                         <div class="flex justify-between items-center mb-6">
                             <h2 class="text-2xl font-bold text-gray-900 dark:text-gray-100">Recent Reservations</h2>
                             <span class="text-sm text-gray-500">
-                                Showing {{ $restaurant->reservations->take(5)->count() }} of {{ $restaurant->reservations->count() }} reservations
+                                Showing {{ $restaurant->reservations->take(10)->count() }} of {{ $restaurant->reservations->count() }} reservations
                             </span>
                         </div>
                         
@@ -139,36 +139,92 @@
                             <table class="min-w-full divide-y divide-gray-300 dark:divide-gray-600">
                                 <thead class="bg-gray-50 dark:bg-gray-700">
                                     <tr>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Customer</th>
                                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Date & Time</th>
-                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Guests</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Party Size</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Duration</th>
                                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Contact</th>
-                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Status</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-600">
-                                    @foreach($restaurant->reservations->sortByDesc('reservation_date')->take(5) as $reservation)
+                                    @foreach($restaurant->reservations->sortByDesc('reservation_date')->take(10) as $reservation)
                                         <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
-                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">
-                                                {{ \Carbon\Carbon::parse($reservation->reservation_date)->format('M j, Y') }}
-                                                <br>
-                                                <span class="text-xs text-gray-500">{{ \Carbon\Carbon::parse($reservation->reservation_time)->format('g:i A') }}</span>
+                                            <!-- Customer -->
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <div class="flex items-center">
+                                                    <div class="flex-shrink-0 h-10 w-10">
+                                                        <div class="h-10 w-10 rounded-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center">
+                                                            <span class="text-sm font-medium text-blue-600 dark:text-blue-300">
+                                                                {{ strtoupper(substr($reservation->reservation_name, 0, 1) . substr($reservation->reservation_surname, 0, 1)) }}
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="ml-4">
+                                                        <div class="text-sm font-medium text-gray-900 dark:text-gray-100">
+                                                            {{ $reservation->reservation_name }} {{ $reservation->reservation_surname }}
+                                                        </div>
+                                                        <div class="text-sm text-gray-500 dark:text-gray-400">
+                                                            ID: #{{ $reservation->id }}
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </td>
+
+                                            <!-- Date & Time -->
                                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">
-                                                {{ $reservation->guests->count() }} people
+                                                <div>{{ \Carbon\Carbon::parse($reservation->reservation_date)->format('d/m/Y') }}</div>
+                                                <div class="text-xs text-gray-500 dark:text-gray-400">{{ \Carbon\Carbon::parse($reservation->reservation_time)->format('H:i') }}</div>
                                             </td>
+
+                                            <!-- Party Size -->
                                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">
-                                                @if($reservation->guests->isNotEmpty())
-                                                    <div>
-                                                        {{ $reservation->guests->first()->name }}
-                                                        <br>
-                                                        <span class="text-xs text-gray-500">{{ $reservation->guests->first()->email }}</span>
+                                                <div class="flex items-center">
+                                                    <svg class="w-4 h-4 mr-1 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                                                    </svg>
+                                                    {{ $reservation->total_people_count }} {{ Str::plural('person', $reservation->total_people_count) }}
+                                                </div>
+                                                @if($reservation->guests->count() > 0)
+                                                    <div class="text-xs text-gray-500 dark:text-gray-400">
+                                                        + {{ $reservation->guests->count() }} {{ Str::plural('guest', $reservation->guests->count()) }}
                                                     </div>
                                                 @endif
                                             </td>
-                                            <td class="px-6 py-4 whitespace-nowrap">
-                                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                                                    Confirmed
-                                                </span>
+
+                                            <!-- Duration -->
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">
+                                                <div class="flex items-center">
+                                                    <svg class="w-4 h-4 mr-1 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                                    </svg>
+                                                    {{ $reservation->duration_hours }} {{ Str::plural('hour', $reservation->duration_hours) }}
+                                                </div>
+                                            </td>
+
+                                            <!-- Contact -->
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                                                @if($reservation->email)
+                                                    <div>{{ $reservation->email }}</div>
+                                                @endif
+                                                @if($reservation->phone)
+                                                    <div>{{ $reservation->phone }}</div>
+                                                @endif
+                                                @if(!$reservation->email && !$reservation->phone)
+                                                    <span class="text-gray-400 italic">No contact info</span>
+                                                @endif
+                                            </td>
+
+                                            <!-- Actions -->
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">
+                                                <a href="{{ route('reservations.show', $reservation) }}" 
+                                                   class="inline-flex items-center px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium text-xs rounded-lg transition duration-150 ease-in-out">
+                                                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                                                    </svg>
+                                                    View
+                                                </a>
                                             </td>
                                         </tr>
                                     @endforeach

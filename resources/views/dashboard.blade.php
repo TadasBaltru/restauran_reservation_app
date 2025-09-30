@@ -30,13 +30,12 @@
                                     Add Restaurant
                                 </a>
                             </div>
-                            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
+                            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-4">
                                 <!-- Quick Stats -->
                                 @php
                                     $restaurantCount = App\Models\Restaurant::count();
                                     $tableCount = App\Models\Table::count();
                                     $totalCapacity = App\Models\Table::sum('max_people_count');
-                                    $recentReservations = App\Models\Reservation::where('reservation_date', '>=', now())->count();
                                 @endphp
                                 
                                 <div class="bg-white dark:bg-gray-800 p-4 rounded-lg border border-gray-200 dark:border-gray-700">
@@ -77,20 +76,6 @@
                                         <div class="ml-4">
                                             <p class="text-2xl font-bold text-gray-900 dark:text-gray-100">{{ $totalCapacity }}</p>
                                             <p class="text-sm text-gray-600 dark:text-gray-400">Total Capacity</p>
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                <div class="bg-white dark:bg-gray-800 p-4 rounded-lg border border-gray-200 dark:border-gray-700">
-                                    <div class="flex items-center">
-                                        <div class="p-2 bg-orange-100 dark:bg-orange-900 rounded-lg">
-                                            <svg class="w-6 h-6 text-orange-600 dark:text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-                                            </svg>
-                                        </div>
-                                        <div class="ml-4">
-                                            <p class="text-2xl font-bold text-gray-900 dark:text-gray-100">{{ $recentReservations }}</p>
-                                            <p class="text-sm text-gray-600 dark:text-gray-400">Upcoming</p>
                                         </div>
                                     </div>
                                 </div>

@@ -2,7 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 
-Route::view('/', 'welcome');
+// Public Reservation Creation
+Route::get('/', \App\Livewire\Reservation\Create::class)->name('home');
 
 Route::view('dashboard', 'dashboard')
     ->middleware(['auth', 'verified'])
@@ -11,6 +12,12 @@ Route::view('dashboard', 'dashboard')
 Route::view('profile', 'profile')
     ->middleware(['auth'])
     ->name('profile');
+
+// Reservation Management (Authenticated users)
+Route::middleware(['auth'])->group(function () {
+    Route::get('/reservations', \App\Livewire\Reservation\Index::class)->name('reservations.index');
+    Route::get('/reservations/{reservation}', \App\Livewire\Reservation\Show::class)->name('reservations.show');
+});
 
 // Restaurant Management (Admin only) - Livewire Components
 Route::middleware(['auth', 'admin'])->group(function () {
