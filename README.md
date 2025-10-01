@@ -1,199 +1,404 @@
-# 🍽️ Restaurant Reservation App
+# 🍽️ Restaurant Reservation Management System
 
-A modern, full-featured restaurant reservation management system built with Laravel 11, Livewire 3, and MySQL.
+A modern, intelligent restaurant reservation management system built with **Laravel 12**, **Livewire 3**, and **Alpine.js**. Features an advanced table allocation algorithm that optimally assigns tables based on party size, availability, and multiple optimization strategies.
+
+![Laravel](https://img.shields.io/badge/Laravel-12.x-FF2D20?style=flat-square&logo=laravel)
+![Livewire](https://img.shields.io/badge/Livewire-3.x-FB70A9?style=flat-square)
+![PHP](https://img.shields.io/badge/PHP-8.2+-777BB4?style=flat-square&logo=php)
+![TailwindCSS](https://img.shields.io/badge/Tailwind-3.x-38B2AC?style=flat-square&logo=tailwind-css)
+
+---
 
 ## ✨ Features
 
-- **Restaurant Management**: Create and manage multiple restaurants
-- **Table Management**: Configure tables with different capacities
-- **Smart Reservations**: Intelligent table allocation system
-- **Guest Management**: Track reservation guests
-- **User Authentication**: Secure admin and user roles
-- **Real-time UI**: Interactive interface with Livewire
-- **Fully Dockerized**: Easy setup with Laravel Sail
-- **Comprehensive Testing**: Feature and unit tests included
+### 🎯 Core Functionality
+- **Smart Table Allocation**: Intelligent algorithm with multiple optimization strategies
+  - Perfect single table matching
+  - Optimal multi-table combinations using backtracking
+  - Minimum waste seat allocation
+- **Public Reservation System**: User-friendly interface for making reservations
+- **Multi-Guest Support**: Add unlimited guests to reservations
+- **Real-time Availability Checking**: Instant feedback on table availability
+- **Conflict Prevention**: Automatic detection of overlapping reservations
+
+### 🏢 Restaurant Management (Admin)
+- **Full CRUD Operations**: Create, read, update, and delete restaurants
+- **Dynamic Table Management**: Add/remove tables on-the-fly with Livewire
+- **Capacity Analytics**: View total tables and maximum capacity per restaurant
+- **Responsive Admin Dashboard**: Modern, intuitive interface
+
+### 🔒 Security & Authorization
+- **Role-based Access Control**: Admin middleware for restaurant management
+- **Laravel Breeze Authentication**: Secure user authentication out of the box
+- **CSRF Protection**: All forms protected against cross-site request forgery
+- **SQL Injection Prevention**: Eloquent ORM for safe database queries
+
+### 🎨 Modern UI/UX
+- **Responsive Design**: Mobile-first approach with TailwindCSS
+- **Real-time Interactions**: Livewire components for seamless user experience
+- **Alpine.js Enhancements**: Lightweight client-side interactivity
+- **Loading States**: Visual feedback during operations
+- **Toast Notifications**: User-friendly success/error messages
+
+---
 
 ## 🚀 Quick Start
 
-This application is fully dockerized using Laravel Sail. Get started in minutes!
-
 ### Prerequisites
-
-- Docker Desktop (Windows/Mac) or Docker Engine (Linux)
-- Git
+- **Docker Desktop** (Windows/Mac) or **Docker Engine** (Linux)
+- **Git**
 
 ### Installation
 
 ```bash
-# Clone the repository
-git clone <your-repo-url>
+# 1. Clone the repository
+git clone <https://github.com/TadasBaltru/restauran_reservation_app>
 cd restauran_reservation_app
 
-# Copy environment configuration
-copy env.example.reference .env
+# 2. Copy environment configuration
 
-# Install dependencies via Docker
-docker run --rm -v "%cd%:/var/www/html" -w /var/www/html laravelsail/php84-composer:latest composer install --ignore-platform-reqs
+# Linux/Mac
+cp .env.example .env
 
-# Start Docker containers
+# 3. Install PHP dependencies via Docker
+docker run --rm -v $PWD:/var/www/html -w /var/www/html laravelsail/php84-composer:latest composer install --ignore-platform-reqs
+
+# 4. Start Docker containers
 ./vendor/bin/sail up -d
 
-# Setup application
+# 5. Generate application key
 ./vendor/bin/sail artisan key:generate
+
+# 6. Run database migrations
 ./vendor/bin/sail artisan migrate
+
+# 7. Seed sample data
 ./vendor/bin/sail artisan db:seed
 
-# Install frontend dependencies
+# 8. Install frontend dependencies
 ./vendor/bin/sail npm install
+
+# 9. Build frontend assets
 ./vendor/bin/sail npm run dev
 ```
 
-🎉 **Access your app**: http://localhost
+### Access the Application
 
-📚 **Full Documentation**: 
-- [Quick Start Guide](DOCKER_QUICKSTART.md)
-- [Complete Docker Setup Guide](DOCKER_SETUP.md)
-- [System Architecture](RESTAURANT_MANAGEMENT_SYSTEM.md)
+🎉 **Public Reservation Page**: http://localhost  
+🔐 **Admin Dashboard**: http://localhost/restaurants
+
+**Default Admin Credentials** (created by seeder):
+- Email: `admin@restaurant.com`
+- Password: `password`
+
+---
+
+## 📚 Documentation
+
+- **[Quick Start Guide](DOCKER_QUICKSTART.md)** - Get up and running in minutes
+- **[Complete Docker Setup](DOCKER_SETUP.md)** - Detailed Docker configuration
+- **[System Architecture](RESTAURANT_MANAGEMENT_SYSTEM.md)** - Technical implementation details
+
+---
+
+## 🏗️ Architecture
+
+### Technology Stack
+
+| Layer | Technology | Version |
+|-------|-----------|---------|
+| **Backend Framework** | Laravel | 12.x |
+| **Frontend Framework** | Livewire | 3.6+ |
+| **JavaScript** | Alpine.js | ~3.x |
+| **Styling** | TailwindCSS | 3.x |
+| **PHP Version** | PHP | 8.2+ |
+| **Database** | MySQL | 8.0 |
+| **Development** | Laravel Sail | Docker |
+
+### Project Structure
+
+```
+restauran_reservation_app/
+├── app/
+│   ├── Console/
+│   │   └── Commands/              # Artisan commands
+│   ├── Http/
+│   │   ├── Controllers/           # HTTP controllers
+│   │   ├── Middleware/            # Custom middleware (AdminMiddleware)
+│   │   └── Requests/              # Form validation requests
+│   ├── Livewire/
+│   │   ├── Reservation/           # Reservation Livewire components
+│   │   │   ├── Create.php         # Public reservation form
+│   │   │   ├── Index.php          # User's reservations list
+│   │   │   └── Show.php           # Reservation details
+│   │   └── Restaurant/            # Restaurant management components
+│   │       ├── Create.php         # Create restaurant
+│   │       ├── Edit.php           # Edit restaurant
+│   │       ├── Index.php          # List restaurants
+│   │       └── Show.php           # Restaurant details
+│   ├── Models/
+│   │   ├── Reservation.php        # Reservation model
+│   │   ├── ReservationGuest.php   # Guest model
+│   │   ├── Restaurant.php         # Restaurant model
+│   │   ├── Table.php              # Table model
+│   │   └── User.php               # User model
+│   └── Services/
+│       ├── ReservationService.php        # Reservation business logic
+│       ├── RestaurantService.php         # Restaurant business logic
+│       └── TableAllocationService.php    # Smart allocation algorithm
+├── database/
+│   ├── factories/                 # Model factories for testing
+│   ├── migrations/                # Database schema migrations
+│   └── seeders/                   # Database seeders
+│       ├── DatabaseSeeder.php
+│       └── RestaurantSeeder.php   # Sample restaurants & admin user
+├── resources/
+│   ├── css/
+│   │   └── app.css                # TailwindCSS styles
+│   ├── js/
+│   │   ├── app.js                 # Main JavaScript entry
+│   │   └── bootstrap.js           # Laravel Echo, Axios config
+│   └── views/
+│       ├── components/            # Blade components
+│       ├── layouts/
+│       │   ├── app.blade.php      # Authenticated layout
+│       │   ├── guest.blade.php    # Guest layout
+│       │   └── public.blade.php   # Public layout
+│       └── livewire/              # Livewire component views
+├── routes/
+│   ├── auth.php                   # Authentication routes
+│   ├── console.php                # Artisan commands
+│   └── web.php                    # Web routes
+├── tests/
+│   ├── Feature/
+│   │   ├── Auth/                  # Authentication tests
+│   │   └── ReservationAllocationTest.php  # Allocation algorithm tests
+│   └── Unit/
+│       ├── RestaurantTest.php
+│       ├── RestaurantValidationTest.php
+│       └── TableAllocationServiceTest.php
+├── compose.yaml                   # Docker Compose configuration
+└── phpunit.xml                    # PHPUnit configuration
+```
+
+### Database Schema
+
+```sql
+restaurants
+├── id
+├── name
+└── timestamps
+
+tables
+├── id
+├── restaurant_id (FK)
+├── name
+├── min_people_count
+├── max_people_count
+└── timestamps
+
+reservations
+├── id
+├── restaurant_id (FK)
+├── reservation_name
+├── reservation_surname
+├── email
+├── phone
+├── reservation_date (datetime)
+├── duration_hours
+└── timestamps
+
+reservation_guests
+├── id
+├── reservation_id (FK)
+├── name
+├── surname
+├── email (nullable)
+└── timestamps
+
+reservation_tables (pivot)
+├── reservation_id (FK)
+├── table_id (FK)
+└── timestamps
+
+users
+├── id
+├── name
+├── email
+├── password
+├── is_admin (boolean)
+└── timestamps
+```
+
+---
+
+## 🧠 Smart Table Allocation Algorithm
+
+The `TableAllocationService` implements a sophisticated multi-strategy allocation algorithm:
+
+### Allocation Strategies
+
+1. **Perfect Single Match** ⭐
+   - Finds a single table where `max_people_count == party_size`
+   - Zero wasted seats
+   - Fastest allocation
+
+2. **Optimal Combination** 🎯
+   - Uses backtracking algorithm to find best multi-table combination
+   - Minimizes number of tables used
+   - Minimizes wasted seats
+   - Considers all viable combinations
+
+3. **Minimum Single Match** 💡
+   - Fallback strategy
+   - Finds single table where `min_people_count == party_size`
+   - Accepts some seat waste for simplicity
+
+### Conflict Detection
+
+- Checks for overlapping reservations
+- Considers reservation duration
+- Uses MySQL date arithmetic for precise time calculations
+- Prevents double-booking automatically
+
+### Algorithm Features
+
+- **Time Complexity**: Optimized with pruning strategies
+- **Space Complexity**: Efficient backtracking with minimal memory overhead
+- **Availability Filtering**: Pre-filters available tables before allocation
+- **Capacity Validation**: Ensures `min_people_count ≤ party_size ≤ max_people_count`
+
+---
 
 ## 🧪 Testing
+ .env.testing file must also be prepared, current setup using seperate mysql database
+### Run All Tests
 
 ```bash
-# Run all tests
+# Run the complete test suite
 ./vendor/bin/sail artisan test
 
-# Run with coverage
-./vendor/bin/sail artisan test --coverage
-```
 
-## 📊 Database
+### Test Coverage
 
-The app uses two MySQL databases:
-- **Production**: `restauran_reservation_app`
-- **Testing**: `testing` (auto-created)
+- ✅ **Feature Tests**: End-to-end reservation flow
+- ✅ **Unit Tests**: Service layer business logic
+- ✅ **Allocation Tests**: All allocation strategies
+- ✅ **Conflict Tests**: Overlapping reservation handling
+- ✅ **Edge Cases**: Single person, large parties, no availability
 
-Connection details:
-- **Host**: localhost
-- **Port**: 3306
-- **Username**: sail
-- **Password**: password
+### Key Test Files
 
-## 🛠️ Technology Stack
+- `tests/Feature/ReservationAllocationTest.php` - Core allocation scenarios
+- `tests/Unit/TableAllocationServiceTest.php` - Algorithm unit tests
+- `tests/Unit/RestaurantTest.php` - Restaurant model tests
+- `tests/Unit/RestaurantValidationTest.php` - Validation rules
 
-- **Backend**: Laravel 11 (PHP 8.4)
-- **Frontend**: Livewire 3, Alpine.js, Tailwind CSS
-- **Database**: MySQL 8.0
-- **Container**: Docker + Laravel Sail
-- **Testing**: PHPUnit
+---
 
-## 📁 Project Structure
+## 💻 Development
 
-```
-├── app/
-│   ├── Livewire/          # Livewire components
-│   ├── Models/            # Eloquent models
-│   ├── Services/          # Business logic services
-│   └── Http/              # Controllers & middleware
-├── database/
-│   ├── migrations/        # Database migrations
-│   ├── factories/         # Model factories
-│   └── seeders/           # Database seeders
-├── resources/
-│   └── views/             # Blade templates
-├── tests/
-│   ├── Feature/           # Feature tests
-│   └── Unit/              # Unit tests
-├── compose.yaml           # Docker configuration
-└── DOCKER_SETUP.md        # Docker documentation
-```
-
-## 📝 Common Commands
+### Available Commands
 
 ```bash
-# Start containers
+# Start development environment
 ./vendor/bin/sail up -d
 
 # Stop containers
 ./vendor/bin/sail down
 
-# Run artisan commands
+# Run Artisan commands
 ./vendor/bin/sail artisan migrate
-./vendor/bin/sail artisan test
+./vendor/bin/sail artisan db:seed
+./vendor/bin/sail artisan tinker
 
-# Access MySQL CLI
-./vendor/bin/sail mysql
+# Frontend development
+./vendor/bin/sail npm run dev        # Watch for changes
+./vendor/bin/sail npm run build      # Production build
 
-# View logs
-./vendor/bin/sail logs -f
+# Code quality
+./vendor/bin/sail composer lint      # Fix code style (PSR-12)
+./vendor/bin/sail artisan test       # Run tests
+
+# Database
+./vendor/bin/sail mysql              # MySQL CLI
+./vendor/bin/sail artisan migrate:fresh --seed  # Reset & seed
 ```
 
-## 🔒 Security
+## 📊 Usage Examples
 
-- Password hashing with bcrypt
-- CSRF protection
-- SQL injection prevention via Eloquent ORM
-- XSS protection via Blade templating
+### Making a Reservation (Public)
 
-## 🤝 Contributing
+1. Visit the homepage: `http://localhost`
+2. Select a restaurant from the dropdown
+3. Choose date and time
+4. Add guests (optional)
+5. Fill in contact information
+6. Click "Check Availability" to verify table availability
+7. Submit the reservation
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+### Managing Restaurants (Admin)
 
-## 📄 License
+1. Navigate to `/login`
+2. Navigate to `/restaurants`
+3. Click "Add Restaurant"
+4. Enter restaurant name
+5. Add tables dynamically with Livewire
+6. Set minimum and maximum capacity for each table
+7. Save the restaurant
 
-This project is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+### Viewing Reservations
+Admin can also view reservations at `/reservations`
 
 ---
 
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+## 🔧 Configuration
 
-## About Laravel
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+The application uses two databases:
+- **Production**: `restauran_reservation_app`
+- **Testing**: `testing` (auto-created during tests)
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
 
-## Learning Laravel
+## 🐛 Debugging
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### Laravel Debugbar
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+The project includes Laravel Debugbar for development:
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+```php
+// Automatically enabled when APP_DEBUG=true
+// Access at bottom of page or via /_debugbar
+```
 
-## Laravel Sponsors
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+---
 
-### Premium Partners
+## 🚀 Deployment
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+### Production Checklist
 
-## Contributing
+- [ ] Set `APP_ENV=production`
+- [ ] Set `APP_DEBUG=false`
+- [ ] Generate production key: `php artisan key:generate`
+- [ ] Run migrations: `php artisan migrate --force`
+- [ ] Build assets: `npm run build`
+- [ ] Configure queue worker
+- [ ] Set up proper MySQL database
+- [ ] Enable HTTPS
+- [ ] Configure session/cache drivers (Redis recommended)
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
 
-## Code of Conduct
+### Code Style
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+This project follows **PSR-12** coding standards:
 
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+```bash
+./vendor/bin/sail composer lint
+```
+<p align="center">
+<a href="https://laravel.com" target="_blank">
+<img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo">
+</a>
+</p>

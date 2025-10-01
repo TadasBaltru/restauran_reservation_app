@@ -9,13 +9,11 @@ use Illuminate\Support\Collection;
 
 class TableAllocationService
 {
-
-
     public function allocateTables(int $restaurantId, int $numberOfPeople, Carbon $startTime, int $durationHours): ?array
     {
         // Step 1: Get available tables (not reserved during requested time)
         $availableTables = $this->getAvailableTables($restaurantId, $startTime, $durationHours);
-        
+
         if ($availableTables->isEmpty()) {
             return null;
         }
@@ -168,7 +166,7 @@ class TableAllocationService
         // Try each remaining table
         for ($i = $tableIndex; $i < count($tables); $i++) {
             $table = $tables[$i];
-            
+
             // Skip if this table can't seat anyone
             if ($table['min_people_count'] > $remainingPeople) {
                 continue;
@@ -187,10 +185,11 @@ class TableAllocationService
             ];
 
             // Pruning: skip if current allocation already uses more tables than best found
-            if (count($newAllocation) < $minTables || 
-                (count($newAllocation) === $minTables && 
-                 array_sum(array_column($newAllocation, 'table_capacity')) - array_sum(array_column($newAllocation, 'people_seated')) < $minWaste)) {
-                
+            if (
+                count($newAllocation) < $minTables ||
+                (count($newAllocation) === $minTables &&
+                 array_sum(array_column($newAllocation, 'table_capacity')) - array_sum(array_column($newAllocation, 'people_seated')) < $minWaste)
+            ) {
                 // Continue with remaining people
                 $this->backtrackAllocation(
                     $tables,
@@ -208,7 +207,7 @@ class TableAllocationService
     private function isBetterAllocation(int $waste, int $tableCount, int $minWaste, int $minTables): bool
     {
         // Prefer fewer tables first, then less waste
-        return $tableCount < $minTables || 
+        return $tableCount < $minTables ||
                ($tableCount === $minTables && $waste < $minWaste);
     }
 
@@ -222,13 +221,13 @@ class TableAllocationService
     private function findMinimumSingleTableMatch(Collection $tables, int $numberOfPeople): ?array
     {
         $minTable = $tables->first(function ($table) use ($numberOfPeople) {
-            return $table->min_people_count === $numberOfPeople && 
+            return $table->min_people_count === $numberOfPeople &&
                    $table->max_people_count >= $numberOfPeople;
         });
 
         if ($minTable) {
             $wastedSeats = $minTable->max_people_count - $numberOfPeople;
-            
+
             return [
                 'tables' => [
                     [
@@ -254,7 +253,7 @@ class TableAllocationService
         $waste = $allocation['total_wasted_seats'];
 
         $summary = "Allocated {$tableCount} table(s) using '{$strategy}' strategy";
-        
+
         if ($waste > 0) {
             $summary .= " with {$waste} wasted seat(s)";
         }
