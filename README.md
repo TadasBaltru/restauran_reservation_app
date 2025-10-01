@@ -5,7 +5,6 @@ A modern, intelligent restaurant reservation management system built with **Lara
 ![Laravel](https://img.shields.io/badge/Laravel-12.x-FF2D20?style=flat-square&logo=laravel)
 ![Livewire](https://img.shields.io/badge/Livewire-3.x-FB70A9?style=flat-square)
 ![PHP](https://img.shields.io/badge/PHP-8.2+-777BB4?style=flat-square&logo=php)
-![TailwindCSS](https://img.shields.io/badge/Tailwind-3.x-38B2AC?style=flat-square&logo=tailwind-css)
 
 ---
 
@@ -362,24 +361,6 @@ The project includes Laravel Debugbar for development:
 // Automatically enabled when APP_DEBUG=true
 // Access at bottom of page or via /_debugbar
 ```
-
-
----
-
-## 🚀 Deployment
-
-### Production Checklist
-
-- [ ] Set `APP_ENV=production`
-- [ ] Set `APP_DEBUG=false`
-- [ ] Generate production key: `php artisan key:generate`
-- [ ] Run migrations: `php artisan migrate --force`
-- [ ] Build assets: `npm run build`
-- [ ] Configure queue worker
-- [ ] Set up proper MySQL database
-- [ ] Enable HTTPS
-- [ ] Configure session/cache drivers (Redis recommended)
-
 
 ### Code Style
 
