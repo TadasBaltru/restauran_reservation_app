@@ -93,13 +93,6 @@ docker run --rm -v $PWD:/var/www/html -w /var/www/html laravelsail/php84-compose
 
 ---
 
-## 📚 Documentation
-
-- **[Quick Start Guide](DOCKER_QUICKSTART.md)** - Get up and running in minutes
-- **[Complete Docker Setup](DOCKER_SETUP.md)** - Detailed Docker configuration
-- **[System Architecture](RESTAURANT_MANAGEMENT_SYSTEM.md)** - Technical implementation details
-
----
 
 ## 🏗️ Architecture
 
@@ -110,7 +103,6 @@ docker run --rm -v $PWD:/var/www/html -w /var/www/html laravelsail/php84-compose
 | **Backend Framework** | Laravel | 12.x |
 | **Frontend Framework** | Livewire | 3.6+ |
 | **JavaScript** | Alpine.js | ~3.x |
-| **Styling** | TailwindCSS | 3.x |
 | **PHP Version** | PHP | 8.2+ |
 | **Database** | MySQL | 8.0 |
 | **Development** | Laravel Sail | Docker |
@@ -258,7 +250,6 @@ The `TableAllocationService` implements a sophisticated multi-strategy allocatio
 
 - Checks for overlapping reservations
 - Considers reservation duration
-- Uses MySQL date arithmetic for precise time calculations
 - Prevents double-booking automatically
 
 ### Algorithm Features
@@ -271,7 +262,7 @@ The `TableAllocationService` implements a sophisticated multi-strategy allocatio
 ---
 
 ## 🧪 Testing
- .env.testing file must also be prepared, current setup using seperate mysql database
+ .env.testing file must also be prepared, current setup is using seperate mysql databases
 ### Run All Tests
 
 ```bash
