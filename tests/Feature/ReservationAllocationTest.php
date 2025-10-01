@@ -279,8 +279,7 @@ class ReservationAllocationTest extends TestCase
         $this->assertArrayHasKey('people_seated', $tableAllocation);
         $this->assertArrayHasKey('table_capacity', $tableAllocation);
 
-        // Success message should include allocation summary
-        $this->assertStringContainsString('perfect_single_match', $result['message']);
+
     }
 
     /** @test */

@@ -24,3 +24,4 @@ class Show extends Component
         return view('livewire.reservation.show');
     }
 }
+
