@@ -21,6 +21,7 @@ class Create extends Component
     public $duration_hours = 1;
     public $guests = [];
 
+    /** @var \Illuminate\Support\Collection */
     public $restaurants = [];
     public $selectedRestaurant = null;
 
@@ -63,19 +64,29 @@ class Create extends Component
             return;
         }
 
+        // Calculate total people (main person + guests with names)
+        $guestCount = 0;
+        if (!empty($this->guests) && is_array($this->guests)) {
+            $guestCount = count(array_filter($this->guests, function ($guest) {
+                return !empty($guest['name']);
+            }));
+        }
+        $totalPeople = 1 + $guestCount; // Main person + guests
+
         $reservationService = app(ReservationService::class);
         $isAvailable = $reservationService->checkAvailability(
             $this->restaurant_id,
             $this->reservation_date,
             $this->reservation_time,
-            $this->duration_hours
+            $this->duration_hours,
+            $totalPeople
         );
 
         if (!$isAvailable) {
-            $this->addError('reservation_time', 'This time slot is not available. Please choose a different time.');
+            $this->addError('reservation_time', 'No available tables found for your party size and requested time. Please try a different time.');
         } else {
             $this->resetErrorBag('reservation_time');
-            session()->flash('availability', 'This time slot is available!');
+            session()->flash('availability', 'Tables are available for your party of ' . $totalPeople . '!');
         }
     }
 

@@ -110,23 +110,21 @@ class ReservationService
         }
     }
 
-    public function checkAvailability(int $restaurantId, string $date, string $time, int $durationHours): bool
+    public function checkAvailability(int $restaurantId, string $date, string $time, int $durationHours, int $totalPeople = 1): bool
     {
         $reservationDateTime = Carbon::parse($date . ' ' . $time);
-        $endDateTime = $reservationDateTime->copy()->addHours($durationHours);
 
-        // Check if there are any conflicting reservations
-        $conflictingReservations = Reservation::where('restaurant_id', $restaurantId)
-            ->where(function ($query) use ($reservationDateTime, $endDateTime) {
-                $query->where(function ($subQuery) use ($reservationDateTime, $endDateTime) {
-                    // New reservation starts before existing ends and ends after existing starts
-                    $subQuery->where('reservation_date', '<', $endDateTime)
-                        ->whereRaw('DATE_ADD(reservation_date, INTERVAL duration_hours HOUR) > ?', [$reservationDateTime]);
-                });
-            })
-            ->exists();
+        // Use the same table allocation logic as reservation creation
+        $tableAllocationService = app(TableAllocationService::class);
+        $allocation = $tableAllocationService->allocateTables(
+            $restaurantId,
+            $totalPeople,
+            $reservationDateTime,
+            $durationHours
+        );
 
-        return !$conflictingReservations;
+        // Return true if tables can be allocated, false otherwise
+        return $allocation !== null;
     }
 
     private function validateReservationData(array $data): ValidationValidator
