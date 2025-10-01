@@ -149,7 +149,7 @@ class RestaurantService
                 'required',
                 'string',
                 'max:255',
-                $restaurantId ? Rule::unique('restaurants', 'name')->ignore($restaurantId) : 'unique:restaurants,name'
+                'unique:restaurants,name'
             ],
             'tables' => 'array',
             'tables.*.id' => 'nullable|exists:tables,id',
