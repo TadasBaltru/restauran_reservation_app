@@ -16,11 +16,15 @@ class Index extends Component
     public $restaurantFilter = '';
     public $dateFilter = '';
     public $perPage = 15;
+    public $sortField = 'reservation_date';
+    public $sortDirection = 'desc';
 
     protected $queryString = [
         'search' => ['except' => ''],
         'restaurantFilter' => ['except' => ''],
-        'dateFilter' => ['except' => '']
+        'dateFilter' => ['except' => ''],
+        'sortField' => ['except' => 'reservation_date'],
+        'sortDirection' => ['except' => 'desc']
     ];
 
     public function updatingSearch(): void
@@ -38,20 +42,27 @@ class Index extends Component
         $this->resetPage();
     }
 
+    public function sortBy($field): void
+    {
+        if ($this->sortField === $field) {
+            $this->sortDirection = $this->sortDirection === 'asc' ? 'desc' : 'asc';
+        } else {
+            $this->sortField = $field;
+            $this->sortDirection = 'asc';
+        }
+    }
 
     public function getReservationsProperty()
     {
-        $query = Reservation::with(['restaurant', 'guests', 'tables'])
-            ->orderBy('reservation_date', 'desc');
+        $query = Reservation::with(['restaurant', 'guests', 'tables']);
 
         // Apply search filter
         if (!empty($this->search)) {
-            $query->where(function ($q) {
-                $q->where('reservation_name', 'like', '%' . $this->search . '%')
-                  ->orWhere('reservation_surname', 'like', '%' . $this->search . '%')
-                  ->orWhere('email', 'like', '%' . $this->search . '%')
-                  ->orWhere('phone', 'like', '%' . $this->search . '%');
-            });
+            $query->whereAny(
+                ['reservation_name', 'reservation_surname', 'email', 'phone'],
+                'like',
+                "%{$this->search}%"
+            );
         }
 
         // Apply restaurant filter
@@ -62,6 +73,15 @@ class Index extends Component
         // Apply date filter
         if (!empty($this->dateFilter)) {
             $query->whereDate('reservation_date', $this->dateFilter);
+        }
+
+        // Apply sorting
+        if ($this->sortField === 'restaurant') {
+            $query->join('restaurants', 'reservations.restaurant_id', '=', 'restaurants.id')
+                  ->orderBy('restaurants.name', $this->sortDirection)
+                  ->select('reservations.*');
+        } else {
+            $query->orderBy($this->sortField, $this->sortDirection);
         }
 
         return $query->paginate($this->perPage);
@@ -89,4 +109,10 @@ class Index extends Component
         ]);
     }
 }
+
+
+
+
+
+
 
