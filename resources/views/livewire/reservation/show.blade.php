@@ -14,6 +14,13 @@
                         </p>
                     </div>
                     <div class="flex space-x-3">
+                        <button wire:click="confirmCancel"
+                                class="inline-flex items-center px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-medium text-sm rounded-lg transition duration-150 ease-in-out">
+                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                            </svg>
+                            Cancel Reservation
+                        </button>
                         <a href="{{ route('reservations.index') }}" 
                            class="inline-flex items-center px-4 py-2 bg-gray-500 hover:bg-gray-600 text-white font-medium text-sm rounded-lg transition duration-150 ease-in-out">
                             <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -223,4 +230,82 @@
             </div>
         </div>
     </div>
+
+    <!-- Cancel Confirmation Modal -->
+    @if($showCancelModal)
+        <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity z-50 flex items-center justify-center p-4"
+             x-data="{ show: @entangle('showCancelModal') }"
+             x-show="show"
+             x-transition:enter="ease-out duration-300"
+             x-transition:enter-start="opacity-0"
+             x-transition:enter-end="opacity-100"
+             x-transition:leave="ease-in duration-200"
+             x-transition:leave-start="opacity-100"
+             x-transition:leave-end="opacity-0">
+            
+            <div class="relative bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-lg w-full"
+                 @click.away="show = false"
+                 x-transition:enter="ease-out duration-300"
+                 x-transition:enter-start="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+                 x-transition:enter-end="opacity-100 translate-y-0 sm:scale-100"
+                 x-transition:leave="ease-in duration-200"
+                 x-transition:leave-start="opacity-100 translate-y-0 sm:scale-100"
+                 x-transition:leave-end="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95">
+                
+                <div class="p-6">
+                    <!-- Icon -->
+                    <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-100 dark:bg-red-900/30 mb-4">
+                        <svg class="h-6 w-6 text-red-600 dark:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                        </svg>
+                    </div>
+
+                    <!-- Content -->
+                    <div class="text-center">
+                        <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100 mb-2">
+                            Cancel Reservation
+                        </h3>
+                        <p class="text-sm text-gray-500 dark:text-gray-400 mb-6">
+                            Are you sure you want to cancel this reservation? This action cannot be undone and the reservation will be permanently deleted.
+                        </p>
+                        
+                        <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-4 mb-6">
+                            <div class="text-left space-y-2 text-sm">
+                                <div class="flex justify-between">
+                                    <span class="text-gray-600 dark:text-gray-400">Customer:</span>
+                                    <span class="font-medium text-gray-900 dark:text-gray-100">{{ $reservation->reservation_name }} {{ $reservation->reservation_surname }}</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-gray-600 dark:text-gray-400">Restaurant:</span>
+                                    <span class="font-medium text-gray-900 dark:text-gray-100">{{ $reservation->restaurant->name }}</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-gray-600 dark:text-gray-400">Date & Time:</span>
+                                    <span class="font-medium text-gray-900 dark:text-gray-100">{{ \Carbon\Carbon::parse($reservation->reservation_date)->format('d/m/Y') }} at {{ \Carbon\Carbon::parse($reservation->reservation_time)->format('H:i') }}</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-gray-600 dark:text-gray-400">Party Size:</span>
+                                    <span class="font-medium text-gray-900 dark:text-gray-100">{{ $reservation->total_people_count }} {{ Str::plural('person', $reservation->total_people_count) }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Actions -->
+                    <div class="flex space-x-3">
+                        <button type="button"
+                                wire:click="$set('showCancelModal', false)"
+                                class="flex-1 px-4 py-2 bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 font-medium text-sm rounded-lg transition duration-150 ease-in-out">
+                            Keep Reservation
+                        </button>
+                        <button type="button"
+                                wire:click="cancelReservation"
+                                class="flex-1 px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-medium text-sm rounded-lg transition duration-150 ease-in-out">
+                            Yes, Cancel It
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    @endif
 </div>

@@ -51,7 +51,7 @@ A modern, intelligent restaurant reservation management system built with **Lara
 
 ```bash
 # 1. Clone the repository
-git clone <https://github.com/TadasBaltru/restauran_reservation_app>
+git clone https://github.com/TadasBaltru/restauran_reservation_app
 cd restauran_reservation_app
 
 # 2. Copy environment configuration
@@ -339,6 +339,7 @@ The `TableAllocationService` implements a sophisticated multi-strategy allocatio
 
 ### Viewing Reservations
 Admin can also view reservations at `/reservations`
+Reservations can also be deleted
 
 ---
 

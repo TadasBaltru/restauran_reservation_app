@@ -9,6 +9,7 @@ use Illuminate\View\View;
 class Show extends Component
 {
     public Reservation $reservation;
+    public $showCancelModal = false;
 
     public function mount(Reservation $reservation): void
     {
@@ -17,6 +18,26 @@ class Show extends Component
             'guests',
             'tables'
         ]);
+    }
+
+    public function confirmCancel(): void
+    {
+        $this->showCancelModal = true;
+    }
+
+    public function cancelReservation()
+    {
+        try {
+            $reservationId = $this->reservation->id;
+            
+            $this->reservation->delete();
+            
+            session()->flash('success', 'Reservation #' . $reservationId . ' has been cancelled successfully.');
+            
+            return redirect()->route('reservations.index');
+        } catch (\Exception $e) {
+            session()->flash('error', 'Failed to cancel reservation: ' . $e->getMessage());
+        }
     }
 
     public function render(): View
